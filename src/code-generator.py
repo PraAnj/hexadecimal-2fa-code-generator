@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
+import os
 import mmap
 import random
-import os.path
 from pathlib import Path
 from bitarray import bitarray
 
@@ -18,6 +18,14 @@ def markMagicNumbersAsUsed(array):
     # Load a file of magic numbers to ignore, mark them in the array
     array[500] = True
 
+def getRandomSubFolder(current_dir):
+    p = Path(current_dir)
+    sub_folder_names = [f.name for f in p.iterdir() if f.is_dir()]
+    decimalRand = random.randint(0, len(sub_folder_names)-1)
+    sub_folder = sub_folder_names[decimalRand]
+    is_last_folder = (len(sub_folder_names) == 1)
+    return sub_folder, os.path.join(current_dir, sub_folder), is_last_folder
+
 def createSubDirs(level, prefix_dir, array):
     if (level > MAX_LEVELS):
         with open(os.path.join(prefix_dir, leafFileName), 'wb') as fh:
@@ -30,9 +38,9 @@ def createSubDirs(level, prefix_dir, array):
         createSubDirs(level+1, sub_dir, array[index*slice_size:(index+1)*slice_size])
 
 def prepareInitialSetup():
-    if os.path.exists(rootFileName) == False:
+    if not os.path.exists(rootFileName):
         initialData = bitarray(numbersCount)
-        initialData.setall(0)
+        initialData.setall(0) # False
         markMagicNumbersAsUsed(initialData)
         if not os.path.exists(root_dir):
             os.makedirs(root_dir)
@@ -48,15 +56,18 @@ def popRandomHex(level, prefix_dir):
                 index = random.randint(0, len(indexes)-1)
                 decimalRand = indexes[index]
                 array[decimalRand] = True
-                return format(decimalRand, 'X')      
+                delete_me = (len(indexes) == 1) # if last index is choosen
+                return format(decimalRand, 'X'), delete_me
     
-    p = Path(prefix_dir)
-    folder_names = [f.name for f in p.iterdir() if f.is_dir()]
-    decimalRand = random.randint(0, len(folder_names)-1)
-    sub_dir = os.path.join(prefix_dir, folder_names[decimalRand])
-    
-    return folder_names[decimalRand] + popRandomHex(level+1, sub_dir)
+    sub_folder_name, sub_dir, is_last_folder = getRandomSubFolder(prefix_dir)
+    hexa_rand, delete_me = popRandomHex(level+1, sub_dir)
+    if delete_me:
+        os.remove(sub_dir)
+        delete_me = is_last_folder
+    return sub_folder_name + hexa_rand, delete_me
 
 prepareInitialSetup()
-hex_code = popRandomHex(1, root_dir)
+hex_code, delete_me = popRandomHex(1, root_dir)
+if delete_me:
+    os.remove(root_dir) # deleting root finally
 print ("0x" + hex_code)
