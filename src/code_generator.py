@@ -5,6 +5,7 @@ import mmap
 import random
 from pathlib import Path
 from bitarray import bitarray
+import shutil
 
 NUMBERS_COUNT = 16**8
 ROOT_FOLDER_NAME = 'ROOT'
@@ -61,7 +62,7 @@ def pop_random_hexa(level, prefix_dir):
             mapping = mmap.mmap(f.fileno(), 0)
             # endian='big' by default, can change to little
             array = bitarray(buffer=mapping)
-            indices = [i for i, bit in enumerate(array) if bit is False]
+            indices = [i for i, bit in enumerate(array) if bit == False]
             if (len(indices) > 0):
                 index = random.randint(0, len(indices)-1)
                 random_decimal = indices[index]
@@ -72,13 +73,17 @@ def pop_random_hexa(level, prefix_dir):
     sub_folder_name, sub_dir, is_last_folder = get_random_sub_folder(prefix_dir)
     hexa_rand, delete_me = pop_random_hexa(level+1, sub_dir)
     if delete_me:
-        os.remove(sub_dir)
+        shutil.rmtree(sub_dir)
         delete_me = is_last_folder
     return sub_folder_name + hexa_rand, delete_me
 
 
-prepare_initial_setup()
-hex_code, delete_me = pop_random_hexa(1, ROOT_DIR)
-print("0x" + hex_code)
-if delete_me:
-    os.remove(ROOT_DIR)  # deleting root finally
+def main():
+    prepare_initial_setup()
+    hex_code, delete_me = pop_random_hexa(1, ROOT_DIR)
+    print("0x" + hex_code)
+    if delete_me:
+        shutil.rmtree(ROOT_DIR)  # deleting root finally
+
+if __name__ == "__main__":
+    main()
