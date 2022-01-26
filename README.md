@@ -8,5 +8,5 @@ This repo can be used to generate hexadecimal numbers for 2fa.
 4. Unit tests with pytest, catching edge cases too
 5. Requirement.txt for installations (Ex:- bitarray)
 6. Perf values for first folder creation, and random number generation
-7. Write a crawler utility to retrieve all magic hexa numbers
+7. Write a crawler utility to retrieve remaining magic hexa numbers
 8. Way to encrypt the folder hierarchy and files

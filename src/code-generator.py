@@ -8,17 +8,21 @@ from bitarray import bitarray
 
 numbersCount = 16**8
 rootFileName = 'ROOT'
-leafFileName = 'Used_Randoms.npy'
+leafFileName = 'used-randoms.bin'
 MAX_LEVELS = 4
 characters = ['0', '1', '2', '3', '4', '5', '6',
               '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
 current_dir = os.getcwd()
 root_dir = os.path.join(current_dir, rootFileName)
+magic_numbers_file = '../data/magic-hexa-numbers.txt'
 
 
 def markMagicNumbersAsUsed(array):
-    # Load a file of magic numbers to ignore, mark them in the array
-    array[500] = True
+    with open(magic_numbers_file) as f:
+        for line in f:
+            # int identifies hexa automatically and converts to decimal
+            decimal = int(line.strip(), 0)
+            array[decimal] = True
 
 
 def getRandomSubFolder(current_dir):
