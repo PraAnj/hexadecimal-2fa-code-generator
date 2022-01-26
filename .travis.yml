@@ -8,6 +8,7 @@ before_install:
   - pip install codecov
 install:
   - pip install -r requirements.txt # install package + test dependencies
-script: pytest ./src/pytester.py # run tests
+before_script: cd src
+script: pytest pytester.py # run tests
 after_success:
   - codecov # submit coverage
