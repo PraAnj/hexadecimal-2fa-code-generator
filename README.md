@@ -1,4 +1,4 @@
-# Hexa Decimal Code Generator for 2FA
+# Hexa Decimal Code Generator for 2FA - [![Build Status](https://travis-ci.org/PraAnj/hexadecimal-2fa-code-generator.png?branch=main)](https://travis-ci.org/PraAnj/hexadecimal-2fa-code-generator)
 This repo can be used to generate 8 digit hexadecimal numbers for 2fa. Following rules are applied,
 
 1. Every time you run the program, it should emit one 8-digit hexadecimal code;
