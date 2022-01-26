@@ -54,7 +54,8 @@ def test_folder_deletion():
 
   hex_code, delete_me = code_generator.pop_random_hexa(1, ROOT_DIR)
   assert delete_me == False
+  
   hex_code, delete_me = code_generator.pop_random_hexa(1, ROOT_DIR)
-  assert delete_me == True
   if delete_me:
         shutil.rmtree(ROOT_DIR)
+  assert delete_me == True
