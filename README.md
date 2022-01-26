@@ -7,3 +7,5 @@ This repo can be used to generate hexadecimal numbers for 2fa.
 3. PEP8 style checker, github actions
 4. Unit tests with pytest
 5. Requirement.txt for installations (Ex:- bitarray)
+6. Perf values for first folder creation, and random number generation
+7. Write a crawler utility to retrieve all magic hexa numbers
