@@ -1,6 +1,5 @@
 language: python
 python:
-  - 3.5
   - 3.6
 before_install:
   - python --version
@@ -8,7 +7,7 @@ before_install:
   - pip install -U pytest
   - pip install codecov
 install:
-  - pip install ".[test]" . # install package + test dependencies
-script: pytest # run tests
+  - pip install requirements.txt # install package + test dependencies
+script: pytest ./src/pytester.py # run tests
 after_success:
   - codecov # submit coverage
