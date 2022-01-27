@@ -6,6 +6,7 @@ import random
 from pathlib import Path
 from bitarray import bitarray
 import shutil
+import multiprocessing
 
 NUMBERS_COUNT = 16**8
 ROOT_FOLDER_NAME = 'ROOT'
@@ -34,25 +35,27 @@ def get_random_sub_folder(current_dir):
 
 
 def create_sub_dirs(level, prefix_dir, array):
+    os.makedirs(prefix_dir)
     if (level > MAX_LEVELS):
         with open(os.path.join(prefix_dir, LEAF_FILE_NAME), 'wb') as fh:
             array.tofile(fh)
         return
     slice_size = int(len(array)/16)
-    for index, char in enumerate(CHARACTERS):
-        sub_dir = os.path.join(prefix_dir, char)
-        os.makedirs(sub_dir)
-        create_sub_dirs(level+1, sub_dir,
-                      array[index*slice_size:(index+1)*slice_size])
-
+    slices = [(level+1, os.path.join(prefix_dir, char), array[index*slice_size:(index+1)*slice_size]) for index, char in enumerate(CHARACTERS)]
+    
+    if level == 1: # Parallel jobs only at the first level
+        with multiprocessing.Pool(processes=4) as pool:
+            pool.starmap(create_sub_dirs, slices)
+            pool.close()
+            pool.join()
+    else:
+        [create_sub_dirs(*slice) for slice in slices]
 
 def prepare_initial_setup():
     if not os.path.exists(ROOT_FOLDER_NAME):
         initial_data = bitarray(NUMBERS_COUNT)
         initial_data.setall(0)  # False
         mark_magic_numbers_as_used(initial_data)
-        if not os.path.exists(ROOT_DIR):
-            os.makedirs(ROOT_DIR)
         create_sub_dirs(1, ROOT_DIR, initial_data)
 
 

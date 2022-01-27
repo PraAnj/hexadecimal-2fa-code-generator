@@ -8,9 +8,9 @@ This repo can be used to generate 8 digit hexadecimal numbers for 2fa. Following
 
 # TODO
 1. Document the design, installation and how to use.
-2. PEP8 style checker, github actions
-3. Unit tests with pytest, catching edge cases too
-4. Update requirements.txt for installations.
-5. Perf values for first folder creation, and random number generation
-6. Write a crawler utility to retrieve remaining magic hexa numbers
-7. Way to encrypt the folder hierarchy and files
+2. PEP8 style checker, github actions (Refer:- https://github.com/marketplace/actions/pycodestyle)
+3. Update pytests to catch edge cases
+4. Update requirements.txt for easy installations.
+5. Calculate perf values for first folder creation, and random number generation
+6. Write a crawler utility to retrieve remaining magic hexa numbers (Ex:-Beautifilsoup)
+7. Implement a way to encrypt the folder hierarchy and files
