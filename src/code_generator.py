@@ -17,6 +17,7 @@ CHARACTERS = ['0', '1', '2', '3', '4', '5', '6',
 MAGIC_NUMBERS_FILE = '../data/magic-hexa-numbers.txt'
 ROOT_DIR = os.path.join(os.getcwd(), ROOT_FOLDER_NAME)
 
+
 def mark_magic_numbers_as_used(array):
     with open(MAGIC_NUMBERS_FILE) as f:
         for line in f:
@@ -42,14 +43,15 @@ def create_sub_dirs(level, prefix_dir, array):
         return
     slice_size = int(len(array)/16)
     slices = [(level+1, os.path.join(prefix_dir, char), array[index*slice_size:(index+1)*slice_size]) for index, char in enumerate(CHARACTERS)]
-    
-    if level == 1: # Parallel jobs only at the first level
+
+    if level == 1:  # Parallel jobs only at the first level
         with multiprocessing.Pool(processes=8) as pool:
             pool.starmap(create_sub_dirs, slices)
             pool.close()
             pool.join()
     else:
         [create_sub_dirs(*slice) for slice in slices]
+
 
 def prepare_initial_setup():
     if not os.path.exists(ROOT_FOLDER_NAME):
@@ -73,12 +75,12 @@ def pop_random_hexa(level, prefix_dir):
                 delete_me = (len(indices) == 1)  # if last index is choosen
                 return format(random_decimal, 'X'), delete_me
 
-    sub_folder_name, sub_dir, is_last_folder = get_random_sub_folder(prefix_dir)
+    sub_folder, sub_dir, is_last_folder = get_random_sub_folder(prefix_dir)
     hexa_rand, delete_me = pop_random_hexa(level+1, sub_dir)
     if delete_me:
         shutil.rmtree(sub_dir)
         delete_me = is_last_folder
-    return sub_folder_name + hexa_rand, delete_me
+    return sub_folder + hexa_rand, delete_me
 
 
 def main():
@@ -87,6 +89,7 @@ def main():
     print("0x" + hex_code)
     if delete_me:
         shutil.rmtree(ROOT_DIR)  # deleting root finally
+
 
 if __name__ == "__main__":
     main()

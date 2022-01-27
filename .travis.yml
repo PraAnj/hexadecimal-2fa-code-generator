@@ -1,6 +1,6 @@
 language: python
 python:
-  - 3.6
+  - 3.8
 before_install:
   - python --version
   - pip install -U pip
@@ -11,4 +11,4 @@ install:
 before_script: cd src
 script: pytest pytester.py # run tests
 after_success:
-  - codecov # submit coverage
+  - codecov --file coverage/lcov.info --disable search # submit coverage
