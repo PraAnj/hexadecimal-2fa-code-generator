@@ -44,7 +44,7 @@ def create_sub_dirs(level, prefix_dir, array):
     slices = [(level+1, os.path.join(prefix_dir, char), array[index*slice_size:(index+1)*slice_size]) for index, char in enumerate(CHARACTERS)]
     
     if level == 1: # Parallel jobs only at the first level
-        with multiprocessing.Pool(processes=4) as pool:
+        with multiprocessing.Pool(processes=8) as pool:
             pool.starmap(create_sub_dirs, slices)
             pool.close()
             pool.join()
